@@ -1,0 +1,59 @@
+{
+  "settings": [
+  ],
+  "dependencies": {
+    "R": [
+      {
+        "name": "move"
+      },
+      {
+        "name": "spacetime"
+      },
+      {
+        "name": "plotKML"
+      }
+    ]
+  },
+  "createsArtifacts": true,
+  "license": {
+    "key": "MIT"
+  },
+  "language": "eng",
+  "keywords": [
+	"map",
+    "interactive",
+	"kml",
+	"google earth"
+  ],
+  "people": [
+    {
+      "firstName": "Andrea",
+      "middleInitials": null,
+      "lastName": "Kölzsch",
+      "email": "akoelzsch@ab.mpg.de",
+      "roles": ["compiler","author","creator"],
+      "orcid": "0000-0003-0193-1563",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    },
+	{
+      "firstName": "Matthias",
+      "middleInitials": null,
+      "lastName": "Loretto",
+      "email": ,
+      "roles": ["author"],
+      "orcid": "",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    }
+  ],
+  "funding": [
+    {
+	"name": "Knobloch Family Foundation",
+	"comment": "grant for Migration Mapper (MPIAB)"
+	}
+  ],
+  "documentation" : {
+    "url": "https://github.com/movestore/KML-output/blob/main/README.md"
+  }
+}
