@@ -27,7 +27,8 @@ rFunction <- function(data)
     attributes_sub <- paste(sp_temp_single_ID@data$ID_attr, sp_temp_single_ID@data$date_time_attr, sep = "; ")
 
     # night roost points 
-    kml_open(sprintf("pts%s.kml", ids[i]) )
+    kml_open(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),sprintf("pts%s.kml", ids[i])))
+    #kml_open(sprintf("pts%s.kml", ids[i]) )
     
     kml_layer(sp_temp_single_ID,
               shape = shape, 
@@ -36,7 +37,8 @@ rFunction <- function(data)
               match.ID = FALSE, 
               html.table = attributes_sub)
     
-    kml_close(sprintf("pts%s.kml", ids[i]) )
+    #kml_close(sprintf("pts%s.kml", ids[i]) )
+    kml_close(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),sprintf("pts%s.kml", ids[i])))
     
     sp_temp_single_ID <- vector()
     
@@ -68,10 +70,11 @@ rFunction <- function(data)
   spLindf_dat <- SpatialLinesDataFrame(spLin_dat, name_info_df)
   proj4string(spLindf_dat) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +towgs84=0,0,0")
   
-  
-  kml_open("trajectories.kml")
+  #kml_open("trajectories.kml")
+  kml_open(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"trajectories.kml"))
   kml_layer.SpatialLines(spLindf_dat, subfolder.name = paste(class(spLindf_dat)), colour=ID, width=3)
-  kml_close("trajectories.kml")
+  #kml_close("trajectories.kml")
+  kml_close(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"trajectories.kml"))
   
   result <- data
   return(result)
