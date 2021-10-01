@@ -4,7 +4,7 @@ library('plotKML')
 
 rFunction <- function(data)
 {
-  Sys.setenv(tz="GMT")
+  Sys.setenv(tz="UTC")
   
   ###  create space time object
   sp_dat <- SpatialPoints(coordinates(data),proj4string=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +towgs84=0,0,0"))
