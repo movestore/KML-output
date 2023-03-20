@@ -1,4 +1,4 @@
-# KML Map Output
+# Write KML
 
 MoveApps
 
@@ -23,7 +23,7 @@ moveStack in Movebank format
 
 `trajectories.kml`: google earth kml file of all individual tracks as lines. Each track has a different colour and can be disabled from view in google earth.
 
-### Parameters 
+### Settings 
 none.
 
 ### Null or error handling:
