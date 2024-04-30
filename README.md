@@ -5,26 +5,37 @@ MoveApps
 Github repository: *github.com/movestore/KML-output*
 
 ## Description
-A small App to explore your tracks with kml files. Each track is presented as a line and individual locations can be laid on top.
+A small App to explore your tracks with kml files. It is possible to obtain a file with points, lines segments and track lines.
 
 ## Documentation
-Using the R-package `plotKML` this App creates for each track a kml file of the locations as points and one overview kml of all tracks as lines (in colours by individual).
+Using the R-package `sf` (st_write) this App creates for each track a kml file of the locations as points, line segments or track lines.
 
 Download the files and open them locally in Google Earth. They can be opened together in Google Earth for overlaying and better exploration. A timeslider for the point files allows to show only points of a specified time interval.
 
 ### Input data
-moveStack in Movebank format
+move2 location object		
 
 ### Output data
-moveStack in Movebank format
+move2 location object
 
 ### Artefacts
-`ptsID.kml`: google earth kml file for each individual track. The locations are presented as points with underlying information about ID and timestamp. A timeslider allows to show only part of the points. The file(s) can be opened together with `trajectories.kml` in Google Earth for overlay and data exploration.
+`file.name_points.gpkg`: kml file containing all tracking data as lines per track of the input data set.
 
-`trajectories.kml`: google earth kml file of all individual tracks as lines. Each track has a different colour and can be disabled from view in google earth.
+`file.name_segments.gpkg`: kml file containing all tracking data as lines per track of the input data set.
+
+`file.name_lines.gpkg`: kml file containing all tracking data as lines per track of the input data set.
 
 ### Settings 
-none.
+**File name (`file.name`):** Provide a file name for the kml file (optional). If none is provided, "moveapps_data" is used.
+
+**Points shapefile (`pts`):** Select if you want to obtain the kml file with points of the locations. Default TRUE
+
+**Line segments shapefile (`seg`):** Select if you want to obtain the kml file with line segments between your locations. Default FALSE
+
+**Track lines shapefile (`lins`):** Select if you want to obtain the kml file with full track lines. Default FALSE
+
+### Most common errors
+Please make an issue in this Github repository.
 
 ### Null or error handling:
 **Data:** The data are not manipulated, but empty input with no locations (NULL) leads to an error. For calculations in further Apps the input data set is returned.

@@ -1,96 +1,34 @@
-library('move')
-library('spacetime')
-library('plotKML')
-library('plotrix')
+library('move2')
+library('sf')
+library('dplyr')
 
-rFunction <- function(data)
-{
-  Sys.setenv(tz="UTC")
-  
-  ###  create space time object
-  sp_dat <- SpatialPoints(coordinates(data),proj4string=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +towgs84=0,0,0"))
-  sp_temp_all <- STIDF(sp_dat, timestamps(data), as.data.frame(data))
-  
-  # prepare html.table
-  sp_temp_all@data$date_time_attr <- paste("DateTime:", sp_temp_all@data$timestamp, sep = " ")
-  sp_temp_all@data$ID_attr <- paste("ID:", sp_temp_all@data$trackId, sep = " ")
-  
-  # kml
-  shape <- "http://maps.google.com/mapfiles/kml/pal2/icon18.png" #like this or with file in MOveApps?
-  
-  ids <- as.character(unique(sp_temp_all@data$trackId))
-  #col <- sapply(rainbow(n=length(ids)),color.id)
+## The parameter "data" is reserved for the data object passed on from the previous app
 
-  
-  for (i in seq(along=ids)) 
-  {
-    sp_temp_single_ID <- sp_temp_all[sp_temp_all@data$trackId == ids[i],]
-    
-    attributes_sub <- paste(sp_temp_single_ID@data$ID_attr, sp_temp_single_ID@data$date_time_attr, sep = "; ")
+# to display messages to the user in the log file of the App in MoveApps
+# one can use the function from the logger.R file:
+# logger.fatal(), logger.error(), logger.warn(), logger.info(), logger.debug(), logger.trace()
 
-    # night roost points 
-    kml_open(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),sprintf("pts%s.kml", ids[i])))
-    #kml_open(sprintf("pts%s.kml", ids[i]) )
-    
-    kml_layer(sp_temp_single_ID, 
-              colour="red",#cannot make this colour variable with parameter col[i]
-              shape = shape, 
-              points_names = "",
-              size = 0.7,
-              match.ID = FALSE, 
-              html.table = attributes_sub)
-    
-    #kml_close(sprintf("pts%s.kml", ids[i]) )
-    kml_close(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),sprintf("pts%s.kml", ids[i])))
-    
-    sp_temp_single_ID <- vector()
-    
-  }
+# Showcase injecting app setting (parameter `year`)
+rFunction = function(data, pts=TRUE, seg=TRUE, lins=TRUE, file.name="moveapps_data", ...) {
   
+  ## move all track associated attributes to the event table
+  data_allattrb <- mt_as_event_attribute(data, names(mt_track_data(data)))
+  ## drop all attributes that are all NA
+  data_allattrb <- data_allattrb %>% select(where(~ !(all(is.na(.)))))
   
-  #################################################
-  #### create trajectories - add lines
+  data_allattrb_seg <- data_allattrb
+  data_allattrb_seg$segments <- mt_segments(data_allattrb_seg)
+  data_allattrb_seg <-data_allattrb_seg %>%  dplyr::filter(st_geometry_type(data_allattrb_seg$segments) == "LINESTRING") # as the last one is a point, this has to be removed or it cannot be saved with st_write()
+  st_geometry(data_allattrb_seg) <- data_allattrb_seg$segments ## making the segments the geometry of the object
   
-  all_lines <- name_info <- list()
-  data.split <- move::split(data)
-  ids_l <- names(data.split)
+  ## one line per track
+  data_lines <- mt_track_lines(data) # returns one line per track, track attrb are kept
   
-  for (j in seq(along=ids_l)) {
-    datai <- data.split[[j]]
-    line_class <- Line(coordinates(datai))
-    
-    all_lines[[j]] <- Lines(line_class, ID=ids_l[j])
-    name_info[[j]] <- ids_l[j]
-    
-    line_class <- vector()
-  }
+  ### Save as KML, points and lines, standard layout (should be improved)
+  if (pts==TRUE) sf::st_write(data_allattrb, dsn = appArtifactPath(paste0(file.name,"_points.kml")), driver="kml", delete_layer = TRUE)
+  if (seg==TRUE) sf::st_write(data_allattrb_seg, dsn=appArtifactPath(paste0(file.name,"_segments.kml")), driver="kml", delete_layer = TRUE)
+  if (lins==TRUE) sf::st_write(data_lines, dsn=appArtifactPath(paste0(file.name,"_lines.kml")), driver="kml", delete_layer = TRUE)
   
-  name_info_df <- as.data.frame(unlist(name_info))
-  names(name_info_df) <- "ID"           
-  
-  row.names(name_info_df) <- name_info_df$ID
-  
-  spLin_dat <- SpatialLines(all_lines)
-  spLindf_dat <- SpatialLinesDataFrame(spLin_dat, name_info_df)
-  proj4string(spLindf_dat) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +towgs84=0,0,0")
-  
-  #kml_open("trajectories.kml")
-  kml_open(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"trajectories.kml"))
-  kml_layer.SpatialLines(spLindf_dat, subfolder.name = paste(class(spLindf_dat)), colour=ID, width=3)
-  #kml_close("trajectories.kml")
-  kml_close(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"trajectories.kml"))
-  
-  result <- data
-  return(result)
+  # provide my result to the next app in the MoveApps workflow
+  return(data)
 }
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  

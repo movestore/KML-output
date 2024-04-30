@@ -1,23 +1,48 @@
 {
+  "version": "1.2",
   "settings": [
+    {
+      "id": "file.name",
+      "name": "File name",
+      "description": "Insert a file name for your kml file, without spaces. Defaults to `moveapps_data`",
+      "defaultValue": "moveapps-data",
+      "type": "STRING"
+    },
+    {
+      "id": "pts",
+      "name": "Points kml",
+      "description": "Select if you want to create a kml file containing the points of the data set.",
+      "defaultValue": true,
+      "type": "CHECKBOX"
+    },
+	{
+      "id": "seg",
+      "name": "Line segments kml",
+      "description": "Select if you want to create a kml file containing the line segements of the data set.",
+      "defaultValue": false,
+      "type": "CHECKBOX"
+    },
+	{
+      "id": "lins",
+      "name": "Track lines kml",
+      "description": "Select if you want to create a kml file containing the full lines per track of the data set.",
+      "defaultValue": false,
+      "type": "CHECKBOX"
+    }
   ],
   "dependencies": {
     "R": [
       {
-        "name": "move"
+        "name": "move2"
       },
       {
-        "name": "spacetime"
+        "name": "sf"
       },
       {
-        "name": "plotKML"
-      },
-	  {
-        "name": "plotrix"
+        "name": "dplyr"
       }
     ]
   },
-  "createsArtifacts": true,
   "license": {
     "key": "MIT"
   },
@@ -48,15 +73,16 @@
       "orcid": "",
       "affiliation": "Max-Planck-Institute of Animal Behavior",
       "affiliationRor": "https://ror.org/026stee22"
+    },
+	{
+      "firstName": "Anne",
+      "middleInitials": "K",
+      "lastName": "Scharf",
+      "email": "ascharf@ab.mpg.de",
+      "roles": ["author"],
+      "orcid": null,
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
     }
-  ],
-  "funding": [
-    {
-	"name": "Knobloch Family Foundation",
-	"comment": "grant for Migration Mapper (MPIAB)"
-	}
-  ],
-  "documentation" : {
-    "url": "https://github.com/movestore/KML-output/blob/main/README.md"
-  }
+  ]
 }
